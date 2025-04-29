@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xushuo.mapper.CourseMapper">
+
+    <sql id="Base_Column_List">
+        course.id,
+        course.mid,
+        course.name,
+        course.remark,
+        course.status,
+        course.create_time createTime,
+        major.name majorName
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.xushuo.entity.Course" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from course
+        left join major on course.mid = major.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and course.id = #{id}
+        </if>
+        <if test="mid != null and mid != '' ">
+            and course.mid = #{mid}
+        </if>
+        <if test="name != null and name != '' ">
+            and course.name like concat('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and course.remark = #{remark}
+        </if>
+        <if test="status != null and status != '' ">
+            and course.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and course.create_time = #{create_time}
+        </if>
+        <if test="majorName != null and majorName != '' ">
+            and major.name like concat('%',#{majorName},'%')
+        </if>
+        </where>
+        order by course.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.xushuo.entity.Course">
+        select 
+        <include refid="Base_Column_List" /> 
+        from course
+        left join major on course.mid = major.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and course.id = #{id}
+        </if>
+        <if test="mid != null and mid != '' ">
+            and course.mid = #{mid}
+        </if>
+        <if test="name != null and name != '' ">
+            and course.name like concat('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and course.remark = #{remark}
+        </if>
+        <if test="status != null and status != '' ">
+            and course.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and course.create_time = #{create_time}
+        </if>
+        <if test="majorName != null and majorName != '' ">
+            and major.name like concat('%',#{majorName},'%')
+        </if>
+        </where>
+        order by course.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.xushuo.entity.Course">
+        select 
+        <include refid="Base_Column_List" /> 
+        from course
+        left join major on course.mid = major.id 
+        where course.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.xushuo.entity.Course" keyProperty="id" useGeneratedKeys="true">
+        insert into course(
+          id,
+          mid,
+          name,
+          remark,
+          status,
+          create_time
+        )values( 
+          #{id},
+          #{mid},
+          #{name},
+          #{remark},
+          #{status},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.xushuo.entity.Course">
+        update course
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="mid != null">
+              mid = #{mid},
+          </if>
+          <if test="name != null">
+              name = #{name},
+          </if>
+          <if test="remark != null">
+              remark = #{remark},
+          </if>
+          <if test="status != null">
+              status = #{status},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from course where id=#{id}
+    </delete>
+
+</mapper>

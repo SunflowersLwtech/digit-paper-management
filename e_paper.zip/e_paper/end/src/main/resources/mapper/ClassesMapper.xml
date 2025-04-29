@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xushuo.mapper.ClassesMapper">
+
+    <sql id="Base_Column_List">
+        classes.id,
+        classes.name,
+        classes.remark,
+        classes.create_time createTime
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.xushuo.entity.Classes" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from classes
+        <where>
+        <if test="id != null and id != '' ">
+            and classes.id = #{id}
+        </if>
+        <if test="name != null and name != '' ">
+            and classes.name like concat('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and classes.remark = #{remark}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and classes.create_time = #{create_time}
+        </if>
+        </where>
+        order by classes.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.xushuo.entity.Classes">
+        select 
+        <include refid="Base_Column_List" /> 
+        from classes
+        <where>
+        <if test="id != null and id != '' ">
+            and classes.id = #{id}
+        </if>
+        <if test="name != null and name != '' ">
+            and classes.name = #{name}
+        </if>
+        <if test="remark != null and remark != '' ">
+            and classes.remark = #{remark}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and classes.create_time = #{create_time}
+        </if>
+        </where>
+        order by classes.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.xushuo.entity.Classes">
+        select 
+        <include refid="Base_Column_List" /> 
+        from classes
+        where classes.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.xushuo.entity.Classes" keyProperty="id" useGeneratedKeys="true">
+        insert into classes(
+          id,
+          name,
+          remark,
+          create_time
+        )values( 
+          #{id},
+          #{name},
+          #{remark},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.xushuo.entity.Classes">
+        update classes
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="name != null">
+              name = #{name},
+          </if>
+          <if test="remark != null">
+              remark = #{remark},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from classes where id=#{id}
+    </delete>
+
+</mapper>

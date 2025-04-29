@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xushuo.mapper.NoticeMapper">
+
+    <sql id="Base_Column_List">
+        notice.id,
+        notice.title,
+        notice.content,
+        notice.status,
+        notice.create_time createTime
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.xushuo.entity.Notice" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from notice
+        <where>
+        <if test="id != null and id != '' ">
+            and notice.id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and notice.title like concat('%',#{title},'%')
+        </if>
+        <if test="content != null and content != '' ">
+            and notice.content = #{content}
+        </if>
+        <if test="status != null and status != '' ">
+            and notice.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and notice.create_time = #{create_time}
+        </if>
+        </where>
+        order by notice.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.xushuo.entity.Notice">
+        select 
+        <include refid="Base_Column_List" /> 
+        from notice
+        <where>
+        <if test="id != null and id != '' ">
+            and notice.id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and notice.title like concat('%',#{title},'%')
+        </if>
+        <if test="content != null and content != '' ">
+            and notice.content = #{content}
+        </if>
+        <if test="status != null and status != '' ">
+            and notice.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and notice.create_time = #{create_time}
+        </if>
+        </where>
+        order by notice.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.xushuo.entity.Notice">
+        select 
+        <include refid="Base_Column_List" /> 
+        from notice
+        where notice.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.xushuo.entity.Notice" keyProperty="id" useGeneratedKeys="true">
+        insert into notice(
+          id,
+          title,
+          content,
+          status,
+          create_time
+        )values( 
+          #{id},
+          #{title},
+          #{content},
+          #{status},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.xushuo.entity.Notice">
+        update notice
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="title != null">
+              title = #{title},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+          <if test="status != null">
+              status = #{status},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from notice where id=#{id}
+    </delete>
+
+</mapper>

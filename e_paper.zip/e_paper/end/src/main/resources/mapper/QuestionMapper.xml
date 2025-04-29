@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xushuo.mapper.QuestionMapper">
+
+    <sql id="Base_Column_List">
+        question.id,
+        question.cid,
+        question.type,
+        question.content,
+        question.answer,
+        question.options,
+        question.status,
+        question.create_time createTime,
+        course.name courseName
+    </sql>
+
+    <!--分页查询使用-->
+    <select id="queryAllByLimit" resultType="com.xushuo.entity.Question" parameterType="map">
+        select 
+        <include refid="Base_Column_List" /> 
+        from question
+        left join course on question.cid = course.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and question.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and question.cid = #{cid}
+        </if>
+        <if test="type != null and type != '' ">
+            and question.type = #{type}
+        </if>
+        <if test="content != null and content != '' ">
+            and question.content like concat('%',#{content},'%')
+        </if>
+        <if test="answer != null and answer != '' ">
+            and question.answer = #{answer}
+        </if>
+        <if test="options != null and options != '' ">
+            and question.options = #{options}
+        </if>
+        <if test="status != null and status != '' ">
+            and question.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and question.create_time = #{create_time}
+        </if>
+        <if test="courseName != null and courseName != '' ">
+            and course.name like concat('%',#{courseName},'%')
+        </if>
+        </where>
+        order by question.create_time desc
+    </select>
+
+    <!--按条件查询使用-->
+    <select id="queryCondition" resultType="com.xushuo.entity.Question">
+        select 
+        <include refid="Base_Column_List" /> 
+        from question
+        left join course on question.cid = course.id 
+        <where>
+        <if test="id != null and id != '' ">
+            and question.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and question.cid = #{cid}
+        </if>
+        <if test="type != null and type != '' ">
+            and question.type = #{type}
+        </if>
+        <if test="content != null and content != '' ">
+            and question.content like concat('%',#{content},'%')
+        </if>
+        <if test="answer != null and answer != '' ">
+            and question.answer = #{answer}
+        </if>
+        <if test="options != null and options != '' ">
+            and question.options = #{options}
+        </if>
+        <if test="status != null and status != '' ">
+            and question.status = #{status}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and question.create_time = #{create_time}
+        </if>
+        <if test="courseName != null and courseName != '' ">
+            and course.name like concat('%',#{courseName},'%')
+        </if>
+        </where>
+        order by question.create_time desc
+    </select>
+
+    <!--根据ID查询-->
+    <select id="queryById" resultType="com.xushuo.entity.Question">
+        select 
+        <include refid="Base_Column_List" /> 
+        from question
+        left join course on question.cid = course.id 
+        where question.id = #{id}
+    </select>
+
+    <!--添加-->
+    <insert id="insert" parameterType="com.xushuo.entity.Question" keyProperty="id" useGeneratedKeys="true">
+        insert into question(
+          id,
+          cid,
+          type,
+          content,
+          answer,
+          options,
+          status,
+          create_time
+        )values( 
+          #{id},
+          #{cid},
+          #{type},
+          #{content},
+          #{answer},
+          #{options},
+          #{status},
+          #{createTime}
+        )
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="com.xushuo.entity.Question">
+        update question
+        <set>
+          <if test="id != null">
+              id = #{id},
+          </if>
+          <if test="cid != null">
+              cid = #{cid},
+          </if>
+          <if test="type != null">
+              type = #{type},
+          </if>
+          <if test="content != null">
+              content = #{content},
+          </if>
+          <if test="answer != null">
+              answer = #{answer},
+          </if>
+          <if test="options != null">
+              options = #{options},
+          </if>
+          <if test="status != null">
+              status = #{status},
+          </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from question where id=#{id}
+    </delete>
+
+    <select id="getRandomQuestions" resultType="com.xushuo.entity.Question">
+        SELECT * FROM question
+        WHERE cid = #{courseId}
+        AND type = #{type}
+        AND status = '01'
+        ORDER BY RAND()
+        LIMIT #{count}
+    </select>
+
+    <select id="getCountByCidAndType" resultType="int">
+        SELECT count(1) FROM question
+        WHERE cid = #{courseId}
+          AND type = #{type}
+          AND status = '01'
+    </select>
+
+</mapper>
